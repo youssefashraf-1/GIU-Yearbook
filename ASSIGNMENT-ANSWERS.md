@@ -40,4 +40,4 @@ Add `graduationDate` to `src/app/models/student.model.ts`, then add values to `p
 
 ### 4. Which step was hardest, and how was it resolved?
 
-Implementation-based reflection: Step 13 requires coordinating the input, image error signal, and computed source, including retrying a different portrait after an earlier failure. This was checked by temporarily using a missing photo path, confirming the placeholder appeared, restoring the JSON, and adding tests for fallback and input replacement; adapt this reflection to your own learning experience.
+Step 13 needed the most attention because the portrait must switch to a placeholder after an error and still load a new photo when the student input changes. I handled this with a signal and a computed source, then tested a missing image path, checked that the fallback appeared, and restored the original JSON.
