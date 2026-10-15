@@ -1,59 +1,36 @@
-# GIUYearbook
+# GIU Yearbook - Assignment 1
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
+Completed student card component for the GIU Yearbook Angular starter.
 
-## Development server
+## Run locally
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Use a Node.js version supported by Angular 22: Node 22.22.3+, 24.15.0+, or 26+.
 
 ```bash
-ng generate component component-name
+npm ci
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Open http://localhost:4200. The directory shows eight student cards with portraits, names, faculties, class years, quotes, and links to the existing student-story placeholder.
+
+## Assignment implementation
+
+- `src/app/components/student-card/`: standalone `app-student-card` with a required `Student` signal input, accessible whole-card router link, lazy portrait loading, and signal/computed image fallback.
+- Scoped CSS uses the starter's design tokens, 310:246 photo proportions, 20px body padding, 12px text gaps, Inter names, Lora quotes, red arrows, and a lift/shadow on hover. The global keyboard focus ring is preserved, and reduced-motion preferences are respected.
+- The students page renders cards inside its existing responsive grid and retains search, faculty filtering, and sorting.
+- Dynamic student URLs use server rendering so the required build succeeds without needing prerender parameters for every student ID.
+- [Assignment answers and reflections](ASSIGNMENT-ANSWERS.md).
+
+## Validation
 
 ```bash
-ng generate --help
+npm test -- --watch=false
+npx ng build --configuration development
+npm run build
 ```
 
-## Building
+Ten automated tests cover card data, accessible labels, router navigation, image fallback and recovery, directory search/filter/sort, loading/error states, and the application shell.
 
-To build the project run:
+Manual browser checks: eight loaded portraits and four columns at 1280px; one column with no horizontal overflow at 390px; search for `maya`; faculty filtering; alphabetical sorting; keyboard focus; student story navigation; missing-image fallback with the temporary JSON change reverted.
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The original course project remains the source of the page layout and assets. Only the assignment component, its integration, supporting tests, build configuration fix, and documentation are changed.
