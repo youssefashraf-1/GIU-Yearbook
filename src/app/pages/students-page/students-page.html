@@ -48,11 +48,11 @@
 
   <label class="field field--select">
     <span class="visually-hidden">Filter by faculty</span>
-    <select [value]="selectedFaculty()" (change)="onFacultyChange($event)">
-      <option value="all">All faculties</option>
+    <select (change)="onFacultyChange($event)">
+      <option value="all" [selected]="selectedFaculty() === 'all'">All faculties</option>
       <!-- @for builds one <option> per faculty found in the data -->
       @for (f of faculties(); track f) {
-        <option [value]="f">{{ f }}</option>
+        <option [value]="f" [selected]="selectedFaculty() === f">{{ f }}</option>
       }
     </select>
     <img src="icons/chevron-down.svg" alt="" aria-hidden="true" />

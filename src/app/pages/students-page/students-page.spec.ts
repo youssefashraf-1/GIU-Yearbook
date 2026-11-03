@@ -2,10 +2,16 @@
    WHAT: Exercise the directory with representative student data.
    WHY: The new card must preserve search, filtering, sorting and data states. */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
 import { StudentsPage } from './students-page';
 import { StudentService } from '../../services/student.service';
+import { provideStore, provideState } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { App } from '../../app';
+import { routes } from '../../app.routes';
+import { loadStudents } from '../../store/students/students.effects';
+import { studentsFeature } from '../../store/students/students.reducer';
 import { Student } from '../../models/student.model';
 
 const students: Student[] = [
@@ -35,10 +41,16 @@ describe('StudentsPage', () => {
   const service = { getStudents: vi.fn(() => of(students)) };
 
   beforeEach(async () => {
-    service.getStudents.mockReturnValue(of(students));
+    service.getStudents.mockReset().mockReturnValue(of(students));
     await TestBed.configureTestingModule({
-      imports: [StudentsPage],
-      providers: [provideRouter([]), { provide: StudentService, useValue: service }],
+      imports: [StudentsPage, App],
+      providers: [
+        provideRouter(routes),
+        provideStore(),
+        provideState(studentsFeature),
+        provideEffects({ loadStudents }),
+        { provide: StudentService, useValue: service },
+      ],
     }).compileComponents();
   });
 
@@ -109,4 +121,67 @@ describe('StudentsPage', () => {
     );
     expect(names()).toEqual([]);
   });
+
+  it('keeps saves and filters when returning from a student profile', async () => {
+    const app = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+    await app.whenStable();
+    await router.navigateByUrl('/');
+    await app.whenStable();
+    const page: HTMLElement = app.nativeElement;
+    const count = () => page.querySelector('.header__count')?.textContent?.trim();
+    const hearts = () => page.querySelectorAll<HTMLButtonElement>('.card__save');
+
+    expect(count()).toBe('0');
+    hearts()[0].click();
+    hearts()[1].click();
+    await app.whenStable();
+    expect(router.url).toBe('/');
+    expect(count()).toBe('2');
+    hearts()[0].click();
+
+    const search = page.querySelector('input')!;
+    search.value = 'Adam';
+    search.dispatchEvent(new Event('input'));
+    const faculty = page.querySelector('select')!;
+    faculty.value = 'Informatics';
+    faculty.dispatchEvent(new Event('change'));
+    const sort = page.querySelectorAll('select')[1];
+    sort.value = 'name';
+    sort.dispatchEvent(new Event('change'));
+    await app.whenStable();
+
+    page.querySelector<HTMLAnchorElement>('a.card')!.click();
+    await app.whenStable();
+    expect(router.url).toBe('/students/2');
+    expect(page.querySelector('h1')?.textContent).toBe('Adam Schneider');
+    expect(count()).toBe('1');
+
+    page.querySelector<HTMLAnchorElement>('.profile a')!.click();
+    await app.whenStable();
+    expect(router.url).toBe('/');
+    expect(page.querySelector('input')?.value).toBe('Adam');
+    expect(page.querySelectorAll('select')[0].value).toBe('Informatics');
+    expect(page.querySelectorAll('select')[1].value).toBe('name');
+    expect(hearts()).toHaveLength(1);
+    expect(hearts()[0].getAttribute('aria-pressed')).toBe('true');
+    expect(count()).toBe('1');
+    expect(service.getStudents).toHaveBeenCalledTimes(1);
+  });
+
+  it('loads a direct profile URL and handles an unknown ID', async () => {
+    const app = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+    await app.whenStable();
+    await router.navigateByUrl('/students/1');
+    await app.whenStable();
+    const page: HTMLElement = app.nativeElement;
+    expect(page.querySelector('h1')?.textContent).toBe('Maya Hassan');
+
+    await router.navigateByUrl('/students/999');
+    await app.whenStable();
+    expect(page.querySelector('h1')?.textContent).toBe('Student not found');
+    expect(service.getStudents).toHaveBeenCalledTimes(1);
+  });
+
 });

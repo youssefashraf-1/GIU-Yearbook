@@ -8,6 +8,11 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 
+import { provideStore, provideState } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { studentsFeature } from './store/students/students.reducer';
+import { loadStudents } from './store/students/students.effects';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -18,6 +23,9 @@ export const appConfig: ApplicationConfig = {
     // COMMON MISTAKE: skipping this line gives "No provider for HttpClient".
     provideHttpClient(),
 
+    provideStore(),
+    provideState(studentsFeature),
+    provideEffects({ loadStudents }),
     provideClientHydration(),
   ],
 };

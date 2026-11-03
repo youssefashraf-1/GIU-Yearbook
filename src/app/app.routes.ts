@@ -9,6 +9,8 @@ import { Routes } from '@angular/router';
 import { StudentsPage } from './pages/students-page/students-page';
 import { PlaceholderPage } from './pages/placeholder-page/placeholder-page';
 
+import { StudentProfile } from './pages/student-profile/student-profile';
+
 export const routes: Routes = [
   // STEP 1: The landing page. An empty path '' means "the home URL".
   { path: '', component: StudentsPage, title: 'Class of 2028 · GIU Yearbook' },
@@ -21,8 +23,8 @@ export const routes: Routes = [
   { path: 'login', component: PlaceholderPage, data: { title: 'Student login' } },
 
   // STEP 3: `:id` is a route PARAMETER. /students/3 and /students/7 both
-  // match this route. The page can read the number later.
-  { path: 'students/:id', component: PlaceholderPage, data: { title: 'Student story' } },
+  // match this route. The profile uses the ID to read from the store.
+  { path: 'students/:id', component: StudentProfile, title: 'Student story · GIU Yearbook' },
 
   // STEP 4: Wildcard. Any unknown URL goes back to the home page.
   // COMMON MISTAKE: this MUST be last. Routes are matched top to bottom.
