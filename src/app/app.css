@@ -5,3 +5,7 @@ main {
   margin: 0 auto;
   padding: 0 var(--page-margin) var(--space-9);
 }
+
+footer {
+  border-top: 1px solid var(--color-border);
+}

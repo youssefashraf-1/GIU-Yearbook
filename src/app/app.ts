@@ -3,8 +3,9 @@
    WHAT: The outer "shell" every page lives inside: header on top,
          page content in the middle.
    ===================================================================== */
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, afterNextRender, computed, inject } from '@angular/core';
+import { PRIMARY_OUTLET, Router, RouterOutlet } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 import { Header } from './components/header/header';
 import { TopStrip } from './components/top-strip/top-strip';
@@ -18,4 +19,21 @@ import { TopStrip } from './components/top-strip/top-strip';
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {}
+export class App {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
+  protected readonly showYearbookFooter = computed(() => {
+    const url = this.router.lastSuccessfulNavigation()?.finalUrl;
+    const page = url?.root.children[PRIMARY_OUTLET]?.segments[0]?.path;
+    return page === 'login' || page === 'profile';
+  });
+
+  constructor() {
+    afterNextRender(() => {
+      if (!this.auth.isLoggedIn()) {
+        this.auth.checkSession().subscribe({ error: () => {} });
+      }
+    });
+  }
+}

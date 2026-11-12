@@ -11,7 +11,14 @@ npm ci
 npm start
 ```
 
-Open http://localhost:4200. The directory shows eight student cards with portraits, names, faculties, class years, quotes, and links to the existing student-story placeholder.
+Open http://localhost:4200. The directory shows eight student cards with portraits, names, faculties, class years, quotes, and links to their student stories.
+
+## Lab 7
+
+- **Task 1** adds a student login form, a mock API that sets an HttpOnly session cookie, and a protected profile route. “Keep me signed in” sets a seven-day cookie.
+- **Task 2** adds the student story editor with a live quote preview and a per-student draft. Save a draft and refresh the profile or open it in another tab to restore it.
+
+Use the practice account from the Lab 7 handout to sign in. The mock server runs with `npm start`.
 
 ## Assignment implementation
 

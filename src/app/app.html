@@ -6,8 +6,16 @@
           (directory, gallery, ...) here. The header never reloads.
 -->
 <app-header />
-<app-top-strip />
+@if (!showYearbookFooter()) {
+  <app-top-strip />
+}
 
 <main>
   <router-outlet />
 </main>
+
+@if (showYearbookFooter()) {
+  <footer>
+    <app-top-strip />
+  </footer>
+}

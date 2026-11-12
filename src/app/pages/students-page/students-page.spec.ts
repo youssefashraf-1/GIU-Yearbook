@@ -1,6 +1,8 @@
 /* FILE: pages/students-page/students-page.spec.ts
    WHAT: Exercise the directory with representative student data.
    WHY: The new card must preserve search, filtering, sorting and data states. */
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
@@ -46,6 +48,8 @@ describe('StudentsPage', () => {
       imports: [StudentsPage, App],
       providers: [
         provideRouter(routes),
+        provideHttpClient(),
+        provideHttpClientTesting(),
         provideStore(),
         provideState(studentsFeature),
         provideEffects({ loadStudents }),

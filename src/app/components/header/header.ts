@@ -7,6 +7,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+import { AuthService } from '../../services/auth.service';
 import { SavedService } from '../../services/saved.service';
 
 @Component({
@@ -32,4 +33,5 @@ export class Header {
   // screen automatically. Here: did the logo image fail to load?
   protected readonly logoFailed = signal(false);
   protected readonly saved = inject(SavedService);
+  protected readonly auth = inject(AuthService);
 }
